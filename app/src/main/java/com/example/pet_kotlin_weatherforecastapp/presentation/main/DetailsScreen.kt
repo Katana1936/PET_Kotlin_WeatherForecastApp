@@ -1,25 +1,25 @@
 package com.example.pet_kotlin_weatherforecastapp.presentation.main
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.pet_kotlin_weatherforecastapp.R
 import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomTopBar
 import com.example.pet_kotlin_weatherforecastapp.ui.theme.PET_Kotlin_WeatherForecastAppTheme
 
 @Composable
-fun MainScreen(
-    cityName: String,
+fun DetailsScreen(
     temperature: String
 ) {
     Column(
@@ -27,7 +27,7 @@ fun MainScreen(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        CustomTopBar(textName = cityName)
+        CustomTopBar(textName = temperature)
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -40,30 +40,17 @@ fun MainScreen(
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-
-        Text(
-            text = temperature,
-            fontSize = 64.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreenPreview() {
+fun DetailsScreenPreview() {
     PET_Kotlin_WeatherForecastAppTheme {
         Surface {
-            MainScreen(
-                cityName = "Nancy",
+            DetailsScreen(
                 temperature = "30°"
             )
         }
     }
 }
-
-
-
