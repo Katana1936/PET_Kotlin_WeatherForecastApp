@@ -3,31 +3,46 @@ package com.example.pet_kotlin_weatherforecastapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.collectAsState
-import com.example.pet_kotlin_weatherforecastapp.data.WeatherRepository
-import com.example.pet_kotlin_weatherforecastapp.presentation.features.main.MainScreen
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.example.pet_kotlin_weatherforecastapp.presentation.navigation.MainLayout
+import com.example.pet_kotlin_weatherforecastapp.ui.theme.PetKotlinWeatherForecastAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val viewModel: WeatherViewModel by viewModels {
-        WeatherViewModelFactory(WeatherRepository())
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
-                val weather = viewModel.weatherData.collectAsState().value
-                MainScreen(weather)
+            PetKotlinWeatherForecastAppTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val navController = rememberNavController()
+                    MainLayout(navController = navController, startDestination = "main")
+                }
             }
         }
+    }
+}
 
-        viewModel.fetchWeather(
-            apiKey = "c9a492ccf25c130201d59d9e85423eee",
-            lat = 48.6921,
-            lon = 6.1844
-        )
+@Composable
+fun MainLayout(
+    navController: NavHostController,
+    startDestination: String
+) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination
+    ) {
+        composable("main") {
+        }
+
     }
 }
