@@ -3,6 +3,7 @@ package com.example.pet_kotlin_weatherforecastapp.data.remote.model
 import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
+    @SerializedName("coord") val coord: Coord,
     @SerializedName("name") val cityName: String,
     @SerializedName("main") val main: Main,
     @SerializedName("weather") val weather: List<Weather>,
@@ -21,4 +22,9 @@ data class Weather(
 
 data class Wind(
     @SerializedName("speed") val speed: Double
+)
+
+data class Coord(
+    @SerializedName("lat") val lat: Double,
+    @SerializedName("lon") val lon: Double
 )

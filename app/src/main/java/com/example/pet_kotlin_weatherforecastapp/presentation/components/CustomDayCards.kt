@@ -1,7 +1,11 @@
 package com.example.pet_kotlin_weatherforecastapp.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,83 +20,87 @@ import com.example.pet_kotlin_weatherforecastapp.ui.theme.Gray
 import com.example.pet_kotlin_weatherforecastapp.ui.theme.PET_Kotlin_WeatherForecastAppTheme
 import com.example.pet_kotlin_weatherforecastapp.ui.theme.Black
 import androidx.compose.material3.Text
+import coil.compose.AsyncImage
+import com.example.pet_kotlin_weatherforecastapp.data.remote.model.DailyForecast
+import com.example.pet_kotlin_weatherforecastapp.data.remote.model.TempDaily
+import com.example.pet_kotlin_weatherforecastapp.data.remote.model.WeatherItem
+import com.example.pet_kotlin_weatherforecastapp.ui.theme.White
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun CustomDayCard(
-    day: String,
-    weatherDescription: String,
-    iconResId: Int,
-    maxTemp: String,
-    minTemp: String
+    forecast: DailyForecast,
+    onClick: () -> Unit = {}
 ) {
-    Row(
+    // День недели (Mon, Tue и т.д.)
+    val dayName = Instant.ofEpochSecond(forecast.timestamp)
+        .atZone(ZoneId.systemDefault())
+        .format(DateTimeFormatter.ofPattern("EEE"))
+
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .height(80.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Text(
-            text = day,
-            fontSize = 16.sp,
-            color = Gray,
-            modifier = Modifier.weight(1f)
-        )
-
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.weight(2f)
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = iconResId),
-                contentDescription = "weather icon",
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(end = 6.dp)
-            )
-
             Text(
-                text = weatherDescription,
+                text = dayName,
                 fontSize = 16.sp,
-                color = Black
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.weight(1f)
             )
-        }
 
-        Row(
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.weight(2f)
-        ) {
+            AsyncImage(
+                model = "https://openweathermap.org/img/wn/${forecast.weather.first().icon}@2x.png",
+                contentDescription = forecast.weather.first().description,
+                modifier = Modifier.size(32.dp)
+            )
+
+            Spacer(Modifier.width(12.dp))
+
+            val maxTemp = "+${forecast.temp.max.toInt()}°"
+            val minTemp = "+${forecast.temp.min.toInt()}°"
+
             Text(
                 text = maxTemp,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = Black,
+                modifier = Modifier.weight(1f),
                 textAlign = TextAlign.End
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
-
             Text(
                 text = minTemp,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 color = Gray,
+                modifier = Modifier.weight(1f),
                 textAlign = TextAlign.End
             )
         }
     }
 }
-
-@Preview(showBackground = true)
 @Composable
-fun CustomDayCardPreview() {
+@Preview(showBackground = true)
+fun PreviewWeatherCards() {
     PET_Kotlin_WeatherForecastAppTheme {
-        Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             CustomDayCard(
-                day = "Mon",
-                weatherDescription = "Rainy",
-                iconResId = R.drawable.ic_rain,
-                maxTemp = "20°",
-                minTemp = "14°"
+                forecast = DailyForecast(
+                    timestamp = Instant.now().epochSecond,
+                    temp = TempDaily(min = 14.0, max = 20.0),
+                    weather = listOf(WeatherItem("Облачно", "02d"))
+                )
             )
         }
     }
