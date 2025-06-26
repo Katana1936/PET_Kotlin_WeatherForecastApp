@@ -98,11 +98,30 @@ fun DetailsScreen(
                 contentPadding = PaddingValues(horizontal = 0.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
+                // временно пусто
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                repeat(7) {
+                    CustomDayCard(
+                        day = "Mon",
+                        iconResId = R.drawable.ic_cloudy,
+                        weatherDescription = "Rainy",
+                        maxTemp = "+20°",
+                        minTemp = "+14°"
+                    )
+                }
             }
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun DetailsScreenPreview() {

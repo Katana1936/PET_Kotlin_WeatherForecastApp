@@ -24,6 +24,7 @@ import com.example.pet_kotlin_weatherforecastapp.ui.theme.White
 fun CustomTopBar(
     textName: String,
     showBackButton: Boolean = false,
+    showLocationDot: Boolean = false,
     onBackClick: (() -> Unit)? = null
 ) {
     Surface(
@@ -49,29 +50,38 @@ fun CustomTopBar(
                     )
                 }
             } else {
-                Spacer(modifier = Modifier.width(48.dp)) // зарезервировать место
+                Spacer(modifier = Modifier.width(48.dp))
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Box(
-                modifier = Modifier
-                    .size(10.dp)
-                    .background(Color(0xFFFF5C5C), shape = CircleShape)
-            )
 
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = textName,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                color = Color.Black,
-                textAlign = TextAlign.Center,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(1f)
-            )
+            ) {
+                if (showLocationDot) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_point),
+                        contentDescription = "Локация",
+                        tint = Color.Black,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                }
 
-            Spacer(modifier = Modifier.width(48.dp)) // зарезервировать место справа
+                Text(
+                    text = textName,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Spacer(modifier = Modifier.width(48.dp))
         }
     }
 }
+

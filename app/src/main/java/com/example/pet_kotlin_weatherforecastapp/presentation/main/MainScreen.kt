@@ -27,7 +27,8 @@ fun MainScreen(
 ) {
     Scaffold(
         topBar = {
-            CustomTopBar(textName = cityName)
+            CustomTopBar(textName = cityName, showLocationDot = true)
+
         }
     ) { innerPadding ->
         Column(
