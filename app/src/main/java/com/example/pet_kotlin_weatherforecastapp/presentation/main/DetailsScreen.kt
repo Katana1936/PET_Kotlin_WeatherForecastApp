@@ -91,12 +91,6 @@ fun DetailsScreen(
                             iconCode = it,
                             modifier = Modifier.size(80.dp)
                         )
-                        Text(
-                            text = description,
-                            fontSize = 14.sp,
-                            color = Gray,
-                            textAlign = TextAlign.Center
-                        )
                     }
                 }
 

@@ -35,63 +35,57 @@ fun CustomDayCard(
     val iconCode = weather?.icon ?: "01d"
     val description = weather?.main ?: weather?.description ?: "—"
 
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .height(60.dp)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        Text(
+            text = dayName,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.weight(1f)
+        )
+
         Row(
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(2f)
         ) {
-            Text(
-                text = dayName,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.weight(1f)
+            WeatherIcon(
+                iconCode = iconCode,
+                modifier = Modifier.size(24.dp)
             )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1.5f)
-            ) {
-                WeatherIcon(
-                    iconCode = iconCode,
-                    modifier = Modifier.size(32.dp)
-                )
-
-                Spacer(Modifier.width(8.dp))
-
-                Text(
-                    text = description,
-                    fontSize = 14.sp,
-                    color = Black
-                )
-            }
+            Spacer(Modifier.width(6.dp))
 
             Text(
-                text = "+${forecast.temp.max.toInt()}°",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.End
-            )
-
-            Text(
-                text = "+${forecast.temp.min.toInt()}°",
+                text = description,
                 fontSize = 14.sp,
-                color = Gray,
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.End
+                color = Gray
             )
         }
+
+        Text(
+            text = "+${forecast.temp.max.toInt()}°",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.End
+        )
+
+        Text(
+            text = "+${forecast.temp.min.toInt()}°",
+            fontSize = 14.sp,
+            color = Gray,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.End
+        )
     }
 }
+
 
 
