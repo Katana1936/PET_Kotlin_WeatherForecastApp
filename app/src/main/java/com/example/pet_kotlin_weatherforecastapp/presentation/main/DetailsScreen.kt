@@ -31,10 +31,9 @@ import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomH
 import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomRainCard
 import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomTopBar
 import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomWindCard
-import com.example.pet_kotlin_weatherforecastapp.presentation.components.WeatherVectorIcon
 import com.example.pet_kotlin_weatherforecastapp.ui.theme.Gray
 import androidx.compose.material.icons.rounded.*
-
+import com.example.pet_kotlin_weatherforecastapp.presentation.components.WeatherIcon
 
 
 @Composable
@@ -88,7 +87,10 @@ fun DetailsScreen(
 
                 now?.weather?.firstOrNull()?.icon?.let {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        WeatherVectorIcon(iconCode = it, modifier = Modifier.size(48.dp))
+                        WeatherIcon(
+                            iconCode = it,
+                            modifier = Modifier.size(80.dp)
+                        )
                         Text(
                             text = description,
                             fontSize = 14.sp,
@@ -97,6 +99,7 @@ fun DetailsScreen(
                         )
                     }
                 }
+
 
 
 

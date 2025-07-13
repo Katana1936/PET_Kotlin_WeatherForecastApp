@@ -36,6 +36,8 @@ fun CustomWeatherCard(
         .format(DateTimeFormatter.ofPattern("HH:mm"))
 
     val shape = RoundedCornerShape(24.dp)
+    val iconCode = item.weather.firstOrNull()?.icon ?: "01d"
+    val description = item.weather.firstOrNull()?.description ?: "—"
 
     Card(
         modifier = modifier
@@ -51,10 +53,7 @@ fun CustomWeatherCard(
                 .clip(shape)
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF56CCF2),
-                            Color(0xFF2F80ED)
-                        )
+                        colors = listOf(Color(0xFF56CCF2), Color(0xFF2F80ED))
                     )
                 )
                 .padding(vertical = 10.dp),
@@ -72,9 +71,8 @@ fun CustomWeatherCard(
                     color = White
                 )
 
-                AsyncImage(
-                    model = "https://openweathermap.org/img/wn/${item.weather.first().icon}@2x.png",
-                    contentDescription = item.weather.first().description,
+                WeatherIcon(
+                    iconCode = iconCode,
                     modifier = Modifier.size(28.dp)
                 )
 
@@ -88,3 +86,4 @@ fun CustomWeatherCard(
         }
     }
 }
+

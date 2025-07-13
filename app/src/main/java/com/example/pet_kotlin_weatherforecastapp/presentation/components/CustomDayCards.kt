@@ -32,8 +32,8 @@ fun CustomDayCard(
         .format(DateTimeFormatter.ofPattern("EEE"))
 
     val weather = forecast.weather.firstOrNull()
-    val icon = weather?.icon ?: "01d"
-    val description = weather?.main ?: weather?.description ?: "—" // ← краткое описание
+    val iconCode = weather?.icon ?: "01d"
+    val description = weather?.main ?: weather?.description ?: "—"
 
     Card(
         modifier = Modifier
@@ -50,7 +50,6 @@ fun CustomDayCard(
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // День недели
             Text(
                 text = dayName,
                 fontSize = 16.sp,
@@ -58,14 +57,12 @@ fun CustomDayCard(
                 modifier = Modifier.weight(1f)
             )
 
-            // Иконка + Текст погоды
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1.5f)
             ) {
-                AsyncImage(
-                    model = "https://openweathermap.org/img/wn/${icon}@2x.png",
-                    contentDescription = description,
+                WeatherIcon(
+                    iconCode = iconCode,
                     modifier = Modifier.size(32.dp)
                 )
 
@@ -78,7 +75,6 @@ fun CustomDayCard(
                 )
             }
 
-            // Max температура
             Text(
                 text = "+${forecast.temp.max.toInt()}°",
                 fontSize = 16.sp,
@@ -87,7 +83,6 @@ fun CustomDayCard(
                 textAlign = TextAlign.End
             )
 
-            // Min температура
             Text(
                 text = "+${forecast.temp.min.toInt()}°",
                 fontSize = 14.sp,
@@ -98,4 +93,5 @@ fun CustomDayCard(
         }
     }
 }
+
 

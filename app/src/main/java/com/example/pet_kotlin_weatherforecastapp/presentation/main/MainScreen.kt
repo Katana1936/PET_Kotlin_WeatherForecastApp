@@ -49,84 +49,94 @@ fun MainScreen(
     Scaffold(
         topBar = { CustomTopBar(textName = city, showLocationDot = true) }
     ) { padding ->
+
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 20.dp)
         ) {
-            Spacer(Modifier.height(30.dp))
 
-            weather?.weather?.firstOrNull()?.icon?.let {
-                WeatherVectorIcon(it, Modifier.size(72.dp).align(Alignment.CenterHorizontally))
-            }
-
-
-
-            Spacer(Modifier.height(30.dp))
-
-            Text(
-                text = temp,
-                fontSize = 64.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = desc,
-                fontSize = 18.sp,
-                color = Gray,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(Modifier.height(24.dp))
-
-
-            Spacer(Modifier.height(24.dp))
-            Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
-                CustomWindCard(wind)
-                CustomHumidityCard(humidity)
-                CustomRainCard(rain)
-            }
-
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(padding)
+                    .padding(horizontal = 20.dp)
             ) {
+                Spacer(Modifier.height(30.dp))
+
+                weather?.weather?.firstOrNull()?.icon?.let {
+                    WeatherIcon(
+                        iconCode = it,
+                        modifier = Modifier
+                            .size(120.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                }
+
+                Spacer(Modifier.height(30.dp))
+
                 Text(
-                    text = "Сегодня",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Gray
+                    text = temp,
+                    fontSize = 64.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    text = desc,
+                    fontSize = 18.sp,
+                    color = Gray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(24.dp))
 
                 Row(
-                    modifier = Modifier.clickable(onClick = onOpenDetails),
+                    Modifier.fillMaxWidth(),
+                    Arrangement.SpaceBetween
+                ) {
+                    CustomWindCard(wind)
+                    CustomHumidityCard(humidity)
+                    CustomRainCard(rain)
+                }
+
+                Spacer(Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "7 дней",
-                        fontSize = 14.sp,
+                        text = "Сегодня",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
                         color = Gray
                     )
-                    Spacer(Modifier.width(4.dp))
 
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_back),
-                        contentDescription = "open 7-day forecast",
-                        modifier = Modifier.size(16.dp)
-                    )
+                    Row(
+                        modifier = Modifier.clickable(onClick = onOpenDetails),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "7 дней",
+                            fontSize = 14.sp,
+                            color = Gray
+                        )
+                        Spacer(Modifier.width(4.dp))
+
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_back),
+                            contentDescription = "open 7-day forecast",
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
                 }
-            }
 
-            Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(12.dp))
+            }
 
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 20.dp),

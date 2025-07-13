@@ -1,18 +1,20 @@
 package com.example.pet_kotlin_weatherforecastapp.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import coil.compose.AsyncImage
+import androidx.compose.ui.res.painterResource
+import com.example.pet_kotlin_weatherforecastapp.presentation.utils.mapWeatherIconToDrawable
 
 @Composable
 fun WeatherIcon(
-    code: String,
+    iconCode: String,
     modifier: Modifier = Modifier
 ) {
-    val url = "https://openweathermap.org/img/wn/${code}@2x.png"
-    AsyncImage(
-        model = url,
+    Image(
+        painter = painterResource(id = mapWeatherIconToDrawable(iconCode)),
         contentDescription = null,
         modifier = modifier
     )
 }
+
