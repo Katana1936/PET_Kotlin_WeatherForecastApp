@@ -84,4 +84,6 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation(libs.androidx.material.icons.extended)
+
 }

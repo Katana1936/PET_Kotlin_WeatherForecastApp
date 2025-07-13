@@ -22,6 +22,8 @@ import com.example.pet_kotlin_weatherforecastapp.ui.theme.Gray
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import com.example.pet_kotlin_weatherforecastapp.R
+import androidx.compose.material.icons.rounded.*
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -56,8 +58,10 @@ fun MainScreen(
             Spacer(Modifier.height(30.dp))
 
             weather?.weather?.firstOrNull()?.icon?.let {
-                WeatherIcon(it, Modifier.size(180.dp).align(Alignment.CenterHorizontally))
+                WeatherVectorIcon(it, Modifier.size(72.dp).align(Alignment.CenterHorizontally))
             }
+
+
 
             Spacer(Modifier.height(30.dp))
 
