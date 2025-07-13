@@ -1,29 +1,22 @@
 package com.example.pet_kotlin_weatherforecastapp.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pet_kotlin_weatherforecastapp.R
-import com.example.pet_kotlin_weatherforecastapp.ui.theme.Gray
-import com.example.pet_kotlin_weatherforecastapp.ui.theme.PET_Kotlin_WeatherForecastAppTheme
-import com.example.pet_kotlin_weatherforecastapp.ui.theme.Black
-import androidx.compose.material3.Text
 import coil.compose.AsyncImage
 import com.example.pet_kotlin_weatherforecastapp.data.remote.model.DailyForecast
-import com.example.pet_kotlin_weatherforecastapp.data.remote.model.TempDaily
-import com.example.pet_kotlin_weatherforecastapp.data.remote.model.WeatherItem
+import com.example.pet_kotlin_weatherforecastapp.ui.theme.Black
+import com.example.pet_kotlin_weatherforecastapp.ui.theme.Gray
 import com.example.pet_kotlin_weatherforecastapp.ui.theme.White
 import java.time.Instant
 import java.time.ZoneId
@@ -37,6 +30,10 @@ fun CustomDayCard(
     val dayName = Instant.ofEpochSecond(forecast.timestamp)
         .atZone(ZoneId.systemDefault())
         .format(DateTimeFormatter.ofPattern("EEE"))
+
+    val weather = forecast.weather.firstOrNull()
+    val icon = weather?.icon ?: "01d"
+    val description = weather?.main ?: weather?.description ?: "—" // ← краткое описание
 
     Card(
         modifier = Modifier
@@ -53,6 +50,7 @@ fun CustomDayCard(
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // День недели
             Text(
                 text = dayName,
                 fontSize = 16.sp,
@@ -60,27 +58,38 @@ fun CustomDayCard(
                 modifier = Modifier.weight(1f)
             )
 
-            AsyncImage(
-                model = "https://openweathermap.org/img/wn/${forecast.weather.first().icon}@2x.png",
-                contentDescription = forecast.weather.first().description,
-                modifier = Modifier.size(32.dp)
-            )
+            // Иконка + Текст погоды
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1.5f)
+            ) {
+                AsyncImage(
+                    model = "https://openweathermap.org/img/wn/${icon}@2x.png",
+                    contentDescription = description,
+                    modifier = Modifier.size(32.dp)
+                )
 
-            Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(8.dp))
 
-            val maxTemp = "+${forecast.temp.max.toInt()}°"
-            val minTemp = "+${forecast.temp.min.toInt()}°"
+                Text(
+                    text = description,
+                    fontSize = 14.sp,
+                    color = Black
+                )
+            }
 
+            // Max температура
             Text(
-                text = maxTemp,
+                text = "+${forecast.temp.max.toInt()}°",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.End
             )
 
+            // Min температура
             Text(
-                text = minTemp,
+                text = "+${forecast.temp.min.toInt()}°",
                 fontSize = 14.sp,
                 color = Gray,
                 modifier = Modifier.weight(1f),
@@ -89,3 +98,4 @@ fun CustomDayCard(
         }
     }
 }
+

@@ -47,6 +47,9 @@ class WeatherViewModel @Inject constructor(
                         val max = items.maxOf { it.main.tempMax }
                         val icon = items.firstOrNull()?.weather?.firstOrNull()?.icon ?: "01d"
                         val desc = items.firstOrNull()?.weather?.firstOrNull()?.description ?: ""
+                        val main = items.firstOrNull()?.weather?.firstOrNull()?.main ?: ""
+
+
                         val popAvg = items.map { it.pop }.average()
 
                         DailyForecast(
@@ -55,12 +58,11 @@ class WeatherViewModel @Inject constructor(
                                 .atStartOfDay(ZoneId.systemDefault())
                                 .toEpochSecond(),
                             temp = TempDaily(min = min, max = max),
-                            weather = listOf(WeatherItem(description = desc, icon = icon)),
+                            weather = listOf(WeatherItem(main = main, description = desc, icon = icon)),
                             pop = popAvg
                         )
                     }
 
-                    // Кладём в OneCallResponse-заглушку
                     _daily.value = OneCallResponse(
                         lat = coord.lat,
                         lon = coord.lon,

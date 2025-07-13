@@ -70,8 +70,7 @@ fun DetailsScreen(
                 .padding(horizontal = 20.dp)
         ) {
 
-            /** ---- Главное значение дня ---- */
-            Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(20.dp))
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -82,19 +81,30 @@ fun DetailsScreen(
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold
                 )
+
                 Spacer(Modifier.width(12.dp))
 
                 now?.weather?.firstOrNull()?.icon?.let {
-                    WeatherIcon(code = it, modifier = Modifier.size(80.dp))
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        WeatherIcon(code = it, modifier = Modifier.size(80.dp))
+                        Text(
+                            text = description,
+                            fontSize = 14.sp,
+                            color = Gray,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
 
                 Spacer(Modifier.width(12.dp))
+
                 Text(
                     text = minToday,
                     fontSize = 32.sp,
                     color = Gray
                 )
             }
+
 
             Spacer(Modifier.height(8.dp))
             Text(

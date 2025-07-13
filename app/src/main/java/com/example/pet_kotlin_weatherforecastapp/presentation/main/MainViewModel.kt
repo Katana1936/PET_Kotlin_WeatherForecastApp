@@ -39,6 +39,18 @@ class MainViewModel @Inject constructor(
                         if (fResp.isSuccessful) {
                             val forecastList = fResp.body()?.list.orEmpty()
 
+                            // === hourly ===
+                            val hourlyList = forecastList
+                                .take(12)
+                                .map {
+                                    HourlyForecast(
+                                        timestamp = it.timestamp,
+                                        temp = it.main.tempMin,
+                                        weather = it.weather,
+                                        pop = it.pop
+                                    )
+                                }
+
                             val grouped = forecastList.groupBy {
                                 it.dateText.substringBefore(" ")
                             }
@@ -48,6 +60,7 @@ class MainViewModel @Inject constructor(
                                 val max = items.maxOf { it.main.tempMax }
                                 val icon = items.firstOrNull()?.weather?.firstOrNull()?.icon ?: "01d"
                                 val desc = items.firstOrNull()?.weather?.firstOrNull()?.description ?: ""
+                                val main = items.firstOrNull()?.weather?.firstOrNull()?.main ?: ""
                                 val popAvg = items.map { it.pop }.average()
 
                                 DailyForecast(
@@ -55,7 +68,7 @@ class MainViewModel @Inject constructor(
                                         .atStartOfDay(ZoneId.systemDefault())
                                         .toEpochSecond(),
                                     temp = TempDaily(min = min, max = max),
-                                    weather = listOf(WeatherItem(description = desc, icon = icon)),
+                                    weather = listOf(WeatherItem(main = main, description = desc, icon = icon)), // ✅ теперь всё передано
                                     pop = popAvg
                                 )
                             }
@@ -64,7 +77,7 @@ class MainViewModel @Inject constructor(
                                 lat = w.coord.lat,
                                 lon = w.coord.lon,
                                 timezone = "generated",
-                                hourly = emptyList(),
+                                hourly = hourlyList,
                                 daily = dailyList
                             )
                         }

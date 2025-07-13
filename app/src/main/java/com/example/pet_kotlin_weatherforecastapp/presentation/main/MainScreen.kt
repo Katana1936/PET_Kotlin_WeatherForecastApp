@@ -80,6 +80,14 @@ fun MainScreen(
 
             Spacer(Modifier.height(24.dp))
 
+
+            Spacer(Modifier.height(24.dp))
+            Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
+                CustomWindCard(wind)
+                CustomHumidityCard(humidity)
+                CustomRainCard(rain)
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -94,6 +102,7 @@ fun MainScreen(
                     color = Gray
                 )
 
+
                 Row(
                     modifier = Modifier.clickable(onClick = onOpenDetails),
                     verticalAlignment = Alignment.CenterVertically
@@ -105,7 +114,6 @@ fun MainScreen(
                     )
                     Spacer(Modifier.width(4.dp))
 
-                    /* ← ваш drawable вместо Icons.* */
                     Image(
                         painter = painterResource(id = R.drawable.ic_back),
                         contentDescription = "open 7-day forecast",
