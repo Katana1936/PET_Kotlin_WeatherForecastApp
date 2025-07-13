@@ -18,7 +18,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "OPEN_WEATHER_KEY",
+            "\"c9a492ccf25c130201d59d9e85423eee\""
+        )
+
     }
+
 
     buildTypes {
         release {
@@ -32,12 +40,15 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
+
     }
     kotlinOptions {
         jvmTarget = "11"
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -72,5 +83,5 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

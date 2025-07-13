@@ -34,7 +34,6 @@ fun CustomDayCard(
     forecast: DailyForecast,
     onClick: () -> Unit = {}
 ) {
-    // День недели (Mon, Tue и т.д.)
     val dayName = Instant.ofEpochSecond(forecast.timestamp)
         .atZone(ZoneId.systemDefault())
         .format(DateTimeFormatter.ofPattern("EEE"))
@@ -86,21 +85,6 @@ fun CustomDayCard(
                 color = Gray,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.End
-            )
-        }
-    }
-}
-@Composable
-@Preview(showBackground = true)
-fun PreviewWeatherCards() {
-    PET_Kotlin_WeatherForecastAppTheme {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            CustomDayCard(
-                forecast = DailyForecast(
-                    timestamp = Instant.now().epochSecond,
-                    temp = TempDaily(min = 14.0, max = 20.0),
-                    weather = listOf(WeatherItem("Облачно", "02d"))
-                )
             )
         }
     }

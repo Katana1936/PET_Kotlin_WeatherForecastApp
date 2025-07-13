@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class OneCallResponse(
     @SerializedName("lat")       val lat: Double,
     @SerializedName("lon")       val lon: Double,
+
     @SerializedName("timezone")  val timezone: String,
     @SerializedName("hourly")    val hourly: List<HourlyForecast>,
     @SerializedName("daily")     val daily: List<DailyForecast>
@@ -20,8 +21,10 @@ data class HourlyForecast(
 data class DailyForecast(
     @SerializedName("dt")      val timestamp: Long,
     @SerializedName("temp")    val temp: TempDaily,
-    @SerializedName("weather") val weather: List<WeatherItem>
+    @SerializedName("weather") val weather: List<WeatherItem>,
+    @SerializedName("pop")     val pop: Double
 )
+
 
 data class TempDaily(
     @SerializedName("min") val min: Double,

@@ -6,10 +6,10 @@ import coil.compose.AsyncImage
 
 @Composable
 fun WeatherIcon(
-    iconCode: String,
+    code: String,
     modifier: Modifier = Modifier
 ) {
-    val url = "https://openweathermap.org/img/wn/${iconCode}@2x.png"
+    val url = "https://openweathermap.org/img/wn/${code}@2x.png"
     AsyncImage(
         model = url,
         contentDescription = null,

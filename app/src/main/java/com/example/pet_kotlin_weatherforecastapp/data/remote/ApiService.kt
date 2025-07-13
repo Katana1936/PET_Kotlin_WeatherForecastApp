@@ -1,6 +1,6 @@
-// data/remote/ApiService.kt
 package com.example.pet_kotlin_weatherforecastapp.data.remote
 
+import com.example.pet_kotlin_weatherforecastapp.data.remote.model.ForecastResponse
 import com.example.pet_kotlin_weatherforecastapp.data.remote.model.OneCallResponse
 import com.example.pet_kotlin_weatherforecastapp.data.remote.model.WeatherResponse
 import retrofit2.Response
@@ -26,4 +26,14 @@ interface ApiService {
         @Query("lang")    lang: String = "ru",
         @Query("appid")   apiKey: String
     ): Response<OneCallResponse>
+
+    @GET("data/2.5/forecast")
+    suspend fun getForecast(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
+        @Query("appid") apiKey: String,
+        @Query("units") units: String = "metric",
+        @Query("lang") lang: String = "ru"
+    ): Response<ForecastResponse>
+
 }
