@@ -39,9 +39,6 @@ fun MainScreen(
     val weather by vm.weather.collectAsState()
     val forecast by vm.forecast.collectAsState()
 
-    LaunchedEffect(true) {
-        vm.fetchBySavedLocation(context, apiKey)
-    }
 
     val city = weather?.cityName ?: "—"
     val temp = weather?.main?.temp?.toInt()?.let { "$it°" } ?: "--°"

@@ -15,9 +15,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import com.example.pet_kotlin_weatherforecastapp.ui.theme.PET_Kotlin_WeatherForecastAppTheme
-import dagger.hilt.android.AndroidEntryPoint
 import com.example.pet_kotlin_weatherforecastapp.navigation.AppNavGraph
 import com.example.pet_kotlin_weatherforecastapp.presentation.main.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted ->
             if (isGranted) {
-                viewModel.requestLocationIfNeeded(applicationContext)
+                viewModel.initLocationAndFetch(applicationContext, BuildConfig.OPEN_WEATHER_KEY)
             }
         }
 
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
         ) {
             locationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         } else {
-            viewModel.requestLocationIfNeeded(applicationContext)
+            viewModel.initLocationAndFetch(applicationContext, BuildConfig.OPEN_WEATHER_KEY)
         }
 
         setContent {
@@ -58,6 +58,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-

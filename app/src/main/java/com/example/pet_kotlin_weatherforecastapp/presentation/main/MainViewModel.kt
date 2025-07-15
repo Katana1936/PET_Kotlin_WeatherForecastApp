@@ -71,6 +71,18 @@ class MainViewModel @Inject constructor(
             }
     }
 
+    fun initLocationAndFetch(context: Context, apiKey: String) = viewModelScope.launch {
+        val saved = LocationPrefs.getSavedLocation(context)
+        val location = saved ?: LocationProvider(context).getCurrentLocation()?.also {
+            LocationPrefs.saveLocation(context, it.latitude, it.longitude)
+        }
+
+        location?.let {
+            fetchBySavedLocation(context, apiKey)
+        }
+    }
+
+
 
     private suspend fun fetchForecast(lat: Double, lon: Double, apiKey: String) {
         runCatching {
