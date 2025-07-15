@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +35,7 @@ fun CustomTopBar(
             .fillMaxWidth()
             .statusBarsPadding()
             .height(64.dp),
-        color = White,
+        color = MaterialTheme.colorScheme.background,
         shadowElevation = 0.dp
     ) {
         Row(
@@ -47,7 +48,6 @@ fun CustomTopBar(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
-//                        imageVector =  Icons.Default.Add ,
                         contentDescription = "Назад",
                         tint = Color.Black
                     )

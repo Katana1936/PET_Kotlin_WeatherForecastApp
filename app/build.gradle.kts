@@ -85,5 +85,7 @@ dependencies {
     kapt(libs.hilt.compiler)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.play.services.location)
+
 
 }

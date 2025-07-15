@@ -24,7 +24,6 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
 
         composable("main") {
             MainScreen(
-                city = "Nancy",
                 apiKey = BuildConfig.OPEN_WEATHER_KEY,
                 onOpenDetails = { nav.navigate("details") }
             )
@@ -32,8 +31,6 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
 
         composable("details") {
             DetailsScreen(
-                city = "Nancy",
-                apiKey = BuildConfig.OPEN_WEATHER_KEY,
                 onBack = { nav.popBackStack() }
             )
         }

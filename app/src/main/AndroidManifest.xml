@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.pet_kotlin_weatherforecastapp">
 
-    <!-- Разрешение на интернет -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 
     <application
         android:name=".WeatherApplication"
@@ -15,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PET_Kotlin_WeatherForecastApp"
-        tools:targetApi="31">  <!-- теперь xmlns:tools объявлено выше -->
+        tools:targetApi="31">
 
         <activity
             android:name=".MainActivity"

@@ -23,38 +23,44 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import com.example.pet_kotlin_weatherforecastapp.R
 import androidx.compose.material.icons.rounded.*
-
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.platform.LocalContext
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
-    city: String = "Nancy",
     apiKey: String,
     onOpenDetails: () -> Unit,
     vm: MainViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
     val weather by vm.weather.collectAsState()
     val forecast by vm.forecast.collectAsState()
 
-    LaunchedEffect(city) { vm.fetch(city, apiKey) }
+    LaunchedEffect(true) {
+        vm.fetchBySavedLocation(context, apiKey)
+    }
 
+    val city = weather?.cityName ?: "—"
     val temp = weather?.main?.temp?.toInt()?.let { "$it°" } ?: "--°"
-    val desc = weather?.weather?.firstOrNull()?.description?.replaceFirstChar { it.uppercase() }
-        ?: "—"
+    val desc = weather?.weather?.firstOrNull()?.description
+        ?.replaceFirstChar { it.uppercaseChar() } ?: "—"
     val wind = weather?.wind?.speed?.toInt()?.toString() ?: "--"
     val humidity = weather?.main?.humidity?.toString() ?: "--"
     val rain = forecast?.hourly?.firstOrNull()?.pop?.let { (it * 100).toInt().toString() } ?: "--"
 
     Scaffold(
-        topBar = { CustomTopBar(textName = city, showLocationDot = true) }
+        topBar = {
+            CustomTopBar(
+                textName = city,
+                showLocationDot = true
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-
+        Column(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .padding(padding)
@@ -62,7 +68,7 @@ fun MainScreen(
             ) {
                 Spacer(Modifier.height(30.dp))
 
-                weather?.weather?.firstOrNull()?.icon?.let {
+                forecast?.hourly?.firstOrNull()?.weather?.firstOrNull()?.icon?.let {
                     WeatherIcon(
                         iconCode = it,
                         modifier = Modifier
@@ -93,10 +99,7 @@ fun MainScreen(
 
                 Spacer(Modifier.height(24.dp))
 
-                Row(
-                    Modifier.fillMaxWidth(),
-                    Arrangement.SpaceBetween
-                ) {
+                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
                     CustomWindCard(wind)
                     CustomHumidityCard(humidity)
                     CustomRainCard(rain)
@@ -153,3 +156,4 @@ fun MainScreen(
         }
     }
 }
+
