@@ -2,29 +2,45 @@ package com.example.pet_kotlin_weatherforecastapp.presentation.main
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.pet_kotlin_weatherforecastapp.presentation.components.*
-import com.example.pet_kotlin_weatherforecastapp.ui.theme.Gray
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
 import com.example.pet_kotlin_weatherforecastapp.R
-import androidx.compose.material.icons.rounded.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.platform.LocalContext
+import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomHumidityCard
+import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomRainCard
+import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomTopBar
+import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomWeatherCard
+import com.example.pet_kotlin_weatherforecastapp.presentation.components.CustomWindCard
+import com.example.pet_kotlin_weatherforecastapp.presentation.components.WeatherIcon
+import com.example.pet_kotlin_weatherforecastapp.ui.theme.Gray
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -35,6 +51,11 @@ fun MainScreen(
     vm: MainViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        vm.requestLocationIfNeeded(context)
+        vm.initLocationAndFetch(context, apiKey)
+    }
 
     val weather by vm.weather.collectAsState()
     val forecast by vm.forecast.collectAsState()
