@@ -48,7 +48,7 @@ import com.example.pet_kotlin_weatherforecastapp.ui.theme.Gray
 fun MainScreen(
     apiKey: String,
     onOpenDetails: () -> Unit,
-    vm: MainViewModel = hiltViewModel()
+    vm: MainViewModel
 ) {
     val context = LocalContext.current
 

@@ -22,14 +22,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val viewModel: MainViewModel by viewModels()
+
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<String>
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        val viewModel: MainViewModel by viewModels()
 
         locationPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -52,9 +52,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             PET_Kotlin_WeatherForecastAppTheme {
                 Surface(Modifier.fillMaxSize()) {
-                    AppNavGraph()
+                    AppNavGraph(viewModel = viewModel)
                 }
             }
         }
     }
 }
+

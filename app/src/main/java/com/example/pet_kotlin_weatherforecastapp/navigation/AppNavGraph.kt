@@ -10,10 +10,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pet_kotlin_weatherforecastapp.BuildConfig
 import com.example.pet_kotlin_weatherforecastapp.presentation.main.DetailsScreen
 import com.example.pet_kotlin_weatherforecastapp.presentation.main.MainScreen
+import com.example.pet_kotlin_weatherforecastapp.presentation.main.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavGraph(modifier: Modifier = Modifier) {
+fun AppNavGraph(
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel
+) {
     val nav = rememberNavController()
 
     NavHost(
@@ -25,14 +29,17 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
         composable("main") {
             MainScreen(
                 apiKey = BuildConfig.OPEN_WEATHER_KEY,
-                onOpenDetails = { nav.navigate("details") }
+                onOpenDetails = { nav.navigate("details") },
+                vm = viewModel
             )
         }
 
         composable("details") {
             DetailsScreen(
-                onBack = { nav.popBackStack() }
+                onBack = { nav.popBackStack() },
+                vm = viewModel
             )
         }
     }
 }
+
