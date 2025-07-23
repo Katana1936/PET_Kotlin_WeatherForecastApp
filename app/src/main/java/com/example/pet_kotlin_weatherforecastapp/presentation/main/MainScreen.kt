@@ -53,9 +53,9 @@ fun MainScreen(
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        vm.requestLocationIfNeeded(context)
         vm.initLocationAndFetch(context, apiKey)
     }
+
 
     val weather by vm.weather.collectAsState()
     val forecast by vm.forecast.collectAsState()

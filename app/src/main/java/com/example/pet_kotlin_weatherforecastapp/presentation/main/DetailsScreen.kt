@@ -25,6 +25,8 @@ fun DetailsScreen(
     val weather by vm.weather.collectAsState()
     val forecast by vm.forecast.collectAsState()
 
+
+
     val currentTemp = weather?.main?.temp?.toInt()?.let { "$it°" } ?: "--°"
     val minToday = forecast?.daily?.firstOrNull()?.temp?.min?.toInt()?.let { "$it°" } ?: "--°"
     val description = weather?.weather?.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "—"

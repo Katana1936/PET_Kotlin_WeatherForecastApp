@@ -1,6 +1,7 @@
 package com.example.pet_kotlin_weatherforecastapp.presentation.main
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pet_kotlin_weatherforecastapp.data.local.LocationPrefs
@@ -28,112 +29,121 @@ class MainViewModel @Inject constructor(
 
     fun requestLocationIfNeeded(context: Context) = viewModelScope.launch {
         val saved = LocationPrefs.getSavedLocation(context)
+        Log.d("DEBUG", "Saved location: $saved")
         if (saved == null) {
             val location = LocationProvider(context).getCurrentLocation()
             location?.let {
                 LocationPrefs.saveLocation(context, it.latitude, it.longitude)
+                Log.d("DEBUG", "Saved new location: ${it.latitude}, ${it.longitude}")
             }
         }
-    }
-
-
-    fun fetchBySavedLocation(context: Context, apiKey: String) = viewModelScope.launch {
-        val location = LocationPrefs.getSavedLocation(context) ?: return@launch
-
-        val lat = location.first
-        val lon = location.second
-
-        runCatching { repo.currentWeatherByCoords(lat, lon, apiKey) }
-            .onSuccess { resp ->
-                if (resp.isSuccessful) {
-                    resp.body()?.let { weatherResponse ->
-                        _weather.value = weatherResponse
-                        fetchForecast(lat, lon, apiKey)
-                    }
-                }
-            }
-    }
-
-
-    fun fetchByCity(city: String, apiKey: String) = viewModelScope.launch {
-        runCatching { repo.currentWeatherByCity(city, apiKey) }
-            .onSuccess { resp ->
-                if (resp.isSuccessful) {
-                    resp.body()?.let { weatherResponse ->
-                        _weather.value = weatherResponse
-
-                        val lat = weatherResponse.coord.lat
-                        val lon = weatherResponse.coord.lon
-
-                        fetchForecast(lat, lon, apiKey)
-                    }
-                }
-            }
     }
 
     fun initLocationAndFetch(context: Context, apiKey: String) = viewModelScope.launch {
         val saved = LocationPrefs.getSavedLocation(context)
-        val location = saved ?: LocationProvider(context).getCurrentLocation()?.also {
-            LocationPrefs.saveLocation(context, it.latitude, it.longitude)
+        Log.d("DEBUG", "Saved location at init: $saved")
+
+        val lat: Double
+        val lon: Double
+
+        if (saved != null) {
+            lat = saved.first
+            lon = saved.second
+        } else {
+            val loc = LocationProvider(context).getCurrentLocation()
+            if (loc == null) {
+                Log.e("MainViewModel", "Location is null. Can't fetch weather.")
+                return@launch
+            }
+
+            lat = loc.latitude
+            lon = loc.longitude
+            LocationPrefs.saveLocation(context, lat, lon)
+            Log.d("DEBUG", "Got current location: $lat, $lon")
         }
 
-        location?.let {
-            fetchBySavedLocation(context, apiKey)
+        fetchWeatherAndForecast(lat, lon, apiKey)
+    }
+
+    private fun fetchWeatherAndForecast(lat: Double, lon: Double, apiKey: String) = viewModelScope.launch {
+        Log.d("DEBUG", "Fetching weather for: lat=$lat, lon=$lon")
+
+        val weatherResp = repo.currentWeatherByCoords(lat, lon, apiKey)
+        if (weatherResp.isSuccessful) {
+            weatherResp.body()?.let { response ->
+                _weather.value = response
+                fetchForecast(lat, lon, apiKey)
+            }
+        } else {
+            Log.e("MainViewModel", "Weather request failed: ${weatherResp.code()}")
         }
     }
 
-
+    fun fetchByCity(city: String, apiKey: String) = viewModelScope.launch {
+        val weatherResp = repo.currentWeatherByCity(city, apiKey)
+        if (weatherResp.isSuccessful) {
+            weatherResp.body()?.let { response ->
+                _weather.value = response
+                val lat = response.coord.lat
+                val lon = response.coord.lon
+                fetchForecast(lat, lon, apiKey)
+            }
+        } else {
+            Log.e("MainViewModel", "Weather by city failed: ${weatherResp.code()}")
+        }
+    }
 
     private suspend fun fetchForecast(lat: Double, lon: Double, apiKey: String) {
-        runCatching {
-            repo.forecast(lat, lon, apiKey)
-        }.onSuccess { fResp ->
-            if (fResp.isSuccessful) {
-                val forecastList = fResp.body()?.list.orEmpty()
+        Log.d("DEBUG", "Fetching forecast for: lat=$lat, lon=$lon")
 
-                val hourlyList = forecastList
-                    .take(12)
-                    .map {
-                        HourlyForecast(
-                            timestamp = it.timestamp,
-                            temp = it.main.tempMin,
-                            weather = it.weather,
-                            pop = it.pop
-                        )
-                    }
+        val response = repo.forecast(lat, lon, apiKey)
+        if (response.isSuccessful) {
+            val forecastList = response.body()?.list.orEmpty()
 
-                val grouped = forecastList.groupBy {
-                    it.dateText.substringBefore(" ")
-                }
-
-                val dailyList = grouped.map { (date, items) ->
-                    val min = items.minOf { it.main.tempMin }
-                    val max = items.maxOf { it.main.tempMax }
-                    val icon = items.firstOrNull()?.weather?.firstOrNull()?.icon ?: "01d"
-                    val desc = items.firstOrNull()?.weather?.firstOrNull()?.description ?: ""
-                    val main = items.firstOrNull()?.weather?.firstOrNull()?.main ?: ""
-                    val popAvg = items.map { it.pop }.average()
-
-                    DailyForecast(
-                        timestamp = LocalDate.parse(date)
-                            .atStartOfDay(ZoneId.systemDefault())
-                            .toEpochSecond(),
-                        temp = TempDaily(min = min, max = max),
-                        weather = listOf(
-                            WeatherItem(main = main, description = desc, icon = icon)
-                        ),
-                        pop = popAvg
+            val hourlyList = forecastList
+                .take(12)
+                .map {
+                    HourlyForecast(
+                        timestamp = it.timestamp,
+                        temp = it.main.tempMin,
+                        weather = it.weather,
+                        pop = it.pop
                     )
                 }
 
-                _forecast.value = OneCallResponse(
-                    lat = lat,
-                    lon = lon,
-                    timezone = "generated",
-                    hourly = hourlyList,
-                    daily = dailyList
+            val grouped = forecastList.groupBy {
+                it.dateText.substringBefore(" ")
+            }
+
+            val dailyList = grouped.map { (date, items) ->
+                val min = items.minOf { it.main.tempMin }
+                val max = items.maxOf { it.main.tempMax }
+                val icon = items.firstOrNull()?.weather?.firstOrNull()?.icon ?: "01d"
+                val desc = items.firstOrNull()?.weather?.firstOrNull()?.description ?: ""
+                val main = items.firstOrNull()?.weather?.firstOrNull()?.main ?: ""
+                val popAvg = items.map { it.pop }.average()
+
+                DailyForecast(
+                    timestamp = LocalDate.parse(date)
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toEpochSecond(),
+                    temp = TempDaily(min = min, max = max),
+                    weather = listOf(
+                        WeatherItem(main = main, description = desc, icon = icon)
+                    ),
+                    pop = popAvg
                 )
             }
+
+            _forecast.value = OneCallResponse(
+                lat = lat,
+                lon = lon,
+                timezone = "generated",
+                hourly = hourlyList,
+                daily = dailyList
+            )
+        } else {
+            Log.e("MainViewModel", "Forecast request failed: ${response.code()}")
         }
     }
 }
